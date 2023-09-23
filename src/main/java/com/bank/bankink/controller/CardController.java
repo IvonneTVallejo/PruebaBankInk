@@ -1,9 +1,6 @@
 package com.bank.bankink.controller;
 
-import com.bank.bankink.model.ActivateRequest;
-import com.bank.bankink.model.BalanceRequest;
-import com.bank.bankink.model.CardNumberRequest;
-import com.bank.bankink.model.CardResponse;
+import com.bank.bankink.model.*;
 import com.bank.bankink.service.CardService;
 import com.bank.bankink.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.Optional;
 
 import static com.bank.bankink.utils.Constantes.*;
 
@@ -51,13 +49,9 @@ public class CardController {
     }
 
     // Método para consultar saldo en la tarjeta
-
-
-    // Método para realizar una transaccion de compra
-
-    // Método para consultar la transaccion
-
-
-    // Método para anular la transaccion
-
+    @GetMapping(value = "/balance/{cardId}")
+    public Optional<BalanceResponse> getBalance(@PathVariable Long cardId){
+        return Optional.ofNullable(cardService.getBalance(cardId));
     }
+
+}

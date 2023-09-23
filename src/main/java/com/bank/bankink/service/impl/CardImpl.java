@@ -12,6 +12,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import static com.bank.bankink.utils.Constantes.*;
 
 import java.text.ParseException;
@@ -117,6 +118,24 @@ public class CardImpl implements CardService {
         CardResponse cardRecharged = transformCardResponse(updatedEntity);
         return cardRecharged;
 
+    }
+
+    @Override
+    public BalanceResponse getBalance(Long cardId) {
+        Optional<CardEntity> entity = cardRepository.findByCardId(cardId);
+        Optional<InactivatedCardsEntity> entityInactive = inactivatedCardsRepository.findByCardId(cardId);
+        if (entityInactive.isPresent()){
+            throw new Excepcion(ERR_05);
+        } else if(!entity.isPresent()){
+            throw new Excepcion(ERR_02);
+        }
+        return transformBalanceResponse(entity.get());
+    }
+
+    private BalanceResponse transformBalanceResponse(CardEntity entity) {
+        BalanceResponse response = new BalanceResponse();
+        BeanUtils.copyProperties(entity, response);
+        return response;
     }
 
 }

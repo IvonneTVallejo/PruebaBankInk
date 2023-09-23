@@ -13,4 +13,6 @@ public interface CardService {
     void inactivateCard(Long cardId);
 
     CardResponse topUpBalance(BalanceRequest request);
+
+    BalanceResponse getBalance(Long cardId);
 }
