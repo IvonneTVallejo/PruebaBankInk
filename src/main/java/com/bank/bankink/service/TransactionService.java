@@ -8,4 +8,6 @@ public interface TransactionService {
 
     TransactionResponse getTransactionInfo(Integer transactionId);
 
+    TransactionResponse anulation(AnulationRequest request);
+
 }

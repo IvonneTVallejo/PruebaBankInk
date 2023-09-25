@@ -1,7 +1,6 @@
 package com.bank.bankink.controller;
 
 import com.bank.bankink.model.*;
-import com.bank.bankink.service.CardService;
 import com.bank.bankink.service.TransactionService;
 import com.bank.bankink.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Optional;
-
-import static com.bank.bankink.utils.Constantes.CARD_ACTIVATION;
 import static com.bank.bankink.utils.Constantes.PURCHASE;
 
 @RestController
@@ -35,4 +31,8 @@ public class TransactionController {
     }
 
     // Método para anular la transaccion
+    @PostMapping(value = "/anulation", produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Response<TransactionResponse>> anulation(@RequestBody AnulationRequest entity){
+        return new ResponseEntity<>(new Response<>(transactionService.anulation(entity), PURCHASE), HttpStatus.OK);
+    }
 }

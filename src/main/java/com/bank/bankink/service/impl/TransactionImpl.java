@@ -2,19 +2,15 @@ package com.bank.bankink.service.impl;
 
 import com.bank.bankink.model.*;
 import com.bank.bankink.persistence.entity.CardEntity;
-import com.bank.bankink.persistence.entity.InactivatedCardsEntity;
 import com.bank.bankink.persistence.entity.TransactionsEntity;
 import com.bank.bankink.persistence.repository.CardRepository;
 import com.bank.bankink.persistence.repository.TransactionRepository;
-import com.bank.bankink.service.CardService;
 import com.bank.bankink.service.TransactionService;
 import com.bank.bankink.utils.Excepcion;
 import com.bank.bankink.utils.UtilidadesAplicacion;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.swing.text.html.Option;
 import java.util.Date;
 import java.util.Optional;
 
@@ -69,6 +65,27 @@ public class TransactionImpl implements TransactionService {
             throw new Excepcion(ERR_07);
         }
         return transformTransactionResponse(entity.get());
+    }
+
+    @Override
+    public TransactionResponse anulation(AnulationRequest request) {
+        Optional<TransactionsEntity> entity = transactionRepository.findById(request.getIdTransaction());
+        Optional<CardEntity> entityCard = cardRepository.findByCardId(request.getCardId());
+        if(!entity.isPresent()){
+            throw new Excepcion(ERR_07);
+        }
+
+        TransactionsEntity existingEntity = entity.get();
+        CardEntity existingCard = entityCard.get();
+        double currentBalance = existingCard.getBalance();
+        double newBalance = currentBalance + existingEntity.getPrice();
+        existingCard.setBalance(newBalance);
+        existingEntity.setStatus("Anulado");
+
+        cardRepository.save(existingCard);
+        TransactionsEntity updatedEntity = transactionRepository.save(existingEntity);
+        return transformTransactionResponse(updatedEntity);
+
     }
 
 
